@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Musific</title>
+    <link rel="icon" href="favicon.svg" sizes="any" type="image/svg+xml">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <nav style="display: flex; justify-content: space-between;">
+            <img src="assets/textlogo.svg" class="logo" alt="Logo">
+            <ul class="nav-list">
+                <li><a href="#">Discover</a></li>
+                <li><a href="#">Search</a></li>
+                <li><a href="#">Your Library</a></li>
+            </ul>
+        </nav>
+    </header>
+    <div class="search-container">
+        <input type="text" id="searchInput" placeholder="Search...">
+        <button id="searchBtn">Search</button>
+    </div>
+    <div class="filter-container">
+        <label>
+            <input type="radio" name="filter" value="song" checked> Songs
+        </label>
+        <label>
+            <input type="radio" name="filter" value="artist"> Artists
+        </label>
+        <label>
+            <input type="radio" name="filter" value="album"> Albums
+        </label>
+        <label>
+            <input type="radio" name="filter" value="playlist"> Playlists
+        </label>
+    </div>
+
+    <div class="content-container">
+        <div id="queueContainer" class="queue-container"></div>
+        <div class="card-container"></div>
+    </div>
+    <div class="playbar">
+        <div class="playbar-content">
+            <button class="control-button" id="prevButton">
+                <img src="assets/previous.svg" alt="Previous">
+            </button>
+            <button class="control-button" id="playButton">
+                <img src="assets/play.svg" alt="Play">
+            </button>
+            <button class="control-button" id="nextButton">
+                <img src="assets/next.svg" alt="Next">
+            </button>
+            <div class="seektime">
+                <div id="currentTimeDisplay" class="countUptpDuration">0:00</div>
+                <div class="seekbar">
+                    <div class="filled"></div>
+                    <div class="circle">
+                        <img src="/assets/disk.svg" alt="disk" draggable="false">
+                    </div>
+                </div>
+                <div id="durationDisplay" class="durationOfSong">0:00</div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

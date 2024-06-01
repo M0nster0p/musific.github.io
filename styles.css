@@ -1,0 +1,369 @@
+/* General styles for body, header, nav, etc. */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    overflow: hidden; /* Prevent body scroll */
+}
+
+header {
+    background-color: #282828;
+    padding: 10px 20px;
+    flex-shrink: 0;
+}
+
+.nav-list {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    gap: 20px;
+}
+
+.nav-list a {
+    color: #fff;
+    text-decoration: none;
+}
+
+.logo {
+    width: 90px;
+}
+
+.search-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    background-color: #f5f5f5;
+    border-radius: 4px;
+    flex-shrink: 0;
+}
+
+.search-container input[type="text"] {
+    flex: 1;
+    padding: 8px;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+.search-container button {
+    padding: 8px 16px;
+    margin-left: 10px;
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.filter-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+    flex-shrink: 0;
+}
+
+.filter-container label {
+    margin: 0 10px;
+    font-size: 16px;
+}
+
+.content-container {
+    display: flex;
+    padding: 20px;
+    flex: 1;
+    overflow-y: auto; /* Allow scrolling */
+}
+
+.queue-container {
+    flex: 1;
+    max-width: 300px;
+    padding: 20px;
+    background-color: #f5f5f5;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    overflow-y: auto; /* Allow scrolling */
+    height: calc(100vh - 240px); /* Adjust height to fit within viewport */
+}
+
+.card-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(229px, 1fr));
+    gap: 20px;
+    flex: 3;
+    overflow-y: auto; /* Allow scrolling */
+    height: calc(100vh - 240px); /* Adjust height to fit within viewport */
+}
+
+.card {
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 16px;
+    text-align: left;
+    position: relative;
+    max-width: 250px;
+}
+
+.card img {
+    max-width: 100%;
+    height: auto;
+    margin-bottom: 10px;
+}
+
+.card .play-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: #06191b;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    font-size: 18px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+a {
+    text-decoration: none;
+}
+
+.queue-song {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.queue-song img {
+    width: 50px;
+    height: 50px;
+    margin-right: 10px;
+}
+
+.queue-song.playing {
+    background-color: #d3d3d3;
+    font-weight: bold;
+}
+
+.playbar {
+    background-color: #282828;
+    padding: 10px 20px;
+    position: sticky;
+    bottom: 0;
+    width: 100%;
+    box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.2);
+    z-index: 10;
+    flex-shrink: 0;
+}
+
+.playbar-content {
+    filter: invert(1);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.control-button {
+    background: none;
+    border: none;
+    margin: 0 10px;
+    cursor: pointer;
+}
+
+.control-button img {
+    width: 24px;
+    height: 24px;
+}
+
+
+@media screen and (max-width: 1000px) {
+    .playbar-content {
+        filter: invert(1);
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+    }
+}
+
+/* Custom scrollbar styles */
+::-webkit-scrollbar {
+    width: 8px; /* Set the width of the scrollbar */
+    height: 8px; /* Set the height of the scrollbar */
+}
+
+::-webkit-scrollbar-track {
+    background: transparent; /* Set the background of the scrollbar track */
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #444; /* Set the color of the scrollbar thumb */
+    border-radius: 10px; /* Round the corners of the scrollbar thumb */
+    visibility: hidden; /* Hide the scrollbar thumb */
+}
+
+.content-container:hover ::-webkit-scrollbar-thumb,
+.queue-container:hover ::-webkit-scrollbar-thumb {
+    visibility: visible; /* Show the scrollbar thumb on hover */
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #222; /* Darken the scrollbar thumb on hover */
+}
+
+.seektime {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    padding: 5px;
+}
+.seekbar {
+    height: 8px;
+    width: 80%;
+    background-color: darkgray;
+    position: relative;
+    border-radius: 12px;
+    margin: 5px 0;
+    cursor: pointer;
+}
+.seekbar .filled {
+    height: 100%;
+    background-color: #4caf50; /* Change the color to match your theme */
+    border-radius: 12px;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+.seekbar .circle {
+    width: 16px; /* Adjust size as needed */
+    height: 16px; /* Adjust size as needed */
+    background-color: #4caf50; /* Change the color to match your theme */
+    border-radius: 50%;
+    position: absolute; /* Change position to absolute */
+    top: 50%;
+    transform: translateY(-50%);
+    left: 0; /* Set initial left position to 0 */
+    z-index: 1;
+}
+
+
+.seekbar .circle img {
+    display: block;
+    width: 100%; /* Adjust size as needed */
+    height: auto; /* Adjust size as needed */
+    border-radius: 50%;
+}
+
+/* Media queries for responsiveness */
+@media (max-width: 1200px) {
+    .nav-list {
+        gap: 15px;
+    }
+    
+    .search-container input[type="text"] {
+        font-size: 14px;
+    }
+    
+    .search-container button {
+        font-size: 14px;
+    }
+    
+    .filter-container label {
+        font-size: 14px;
+    }
+    
+    .card-container {
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    }
+    
+    .queue-container {
+        max-width: 250px;
+        height: calc(100vh - 220px); /* Adjust height to fit within viewport */
+    }
+    
+    .card {
+        padding: 12px;
+    }
+}
+
+@media (max-width: 768px) {
+    header {
+        padding: 10px;
+    }
+
+    .nav-list {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .search-container {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .search-container button {
+        margin-left: 0;
+        margin-top: 10px;
+    }
+
+    .filter-container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .filter-container label {
+        margin: 5px 0;
+    }
+
+    .content-container {
+        flex-direction: column;
+    }
+
+    .queue-container {
+        max-width: 100%;
+        height: auto;
+    }
+
+    .card-container {
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    }
+}
+
+@media (max-width: 480px) {
+    .logo {
+        width: 70px;
+    }
+
+    .search-container input[type="text"] {
+        font-size: 12px;
+    }
+
+    .search-container button {
+        font-size: 12px;
+    }
+
+    .filter-container label {
+        font-size: 12px;
+    }
+
+    .queue-container {
+        padding: 10px;
+    }
+
+    .card {
+        padding: 10px;
+    }
+
+    .card-container {
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    }
+
+}
