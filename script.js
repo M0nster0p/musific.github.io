@@ -1,11 +1,28 @@
+async function playPlaylist(playlistId) {
+    const apiUrl = `https://saavn.dev/api/playlists?id=${playlistId}`;
+
+    try {
+        const response = await fetch(apiUrl);
+        const data = await response.json();
+        if (data.success && data.data.songs.length > 0) {
+            queue = data.data.songs;
+            currentSongIndex = 0;
+            playFromQueue();
+            renderQueue(data.data.songs); // Render the queue with playlist data
+        } else {
+            console.error('No songs found in the playlist');
+        }
+    } catch (error) {
+        console.error('Error fetching playlist data:', error);
+    }
+}
+
 const searchInput = document.getElementById('searchInput');
 const filters = document.querySelectorAll('.filter-container input[type="radio"]');
 const searchBtn = document.getElementById('searchBtn');
 const cardContainer = document.querySelector('.card-container');
 const queueContainer = document.getElementById('queueContainer');
-const seekbar = document.querySelector('.seekbar');
-const currentTimeDisplay = document.getElementById('currentTimeDisplay');
-const durationDisplay = document.getElementById('durationDisplay');
+
 
 let audioPlayer = null; // Global audio player instance
 let queue = []; // Array to keep track of the song queue
@@ -13,59 +30,31 @@ let currentSongIndex = 0; // Index of the currently playing song in the queue
 
 searchBtn.addEventListener('click', performSearch);
 
-async function performSearch() {
+function performSearch() {
     const searchTerm = searchInput.value.trim();
     const checkedFilter = document.querySelector('.filter-container input[type="radio"]:checked');
     const filterValue = checkedFilter ? checkedFilter.value : 'song'; // Default to 'song' if no filter is selected
 
     const apiUrl = `https://saavn.dev/api/search/${filterValue}s?query=${encodeURIComponent(searchTerm)}`;
 
-    try {
-        const response = await fetch(apiUrl);
-        if (!response.ok) {
-            throw new Error(`HTTP error ${response.status}`);
-        }
-        const data = await response.json();
-        if (data.success && data.data.results.length > 0) {
-            renderCards(data.data.results, filterValue);
-        } else {
-            renderNoResults();
-        }
-    } catch (error) {
-        console.error('Error fetching data:', error);
-        renderError(error.message);
-    }
-}
-
-function updateSeekBar() {
-    const filled = document.querySelector('.seekbar .filled');
-    const circle = document.querySelector('.seekbar .circle');
-
-    if (filled && circle && audioPlayer) {
-        const progress = (audioPlayer.currentTime / audioPlayer.duration) * 100;
-        filled.style.width = `${progress}%`;
-        circle.style.left = `${progress}%`;
-    }
-}
-
-seekbar.addEventListener('input', () => {
-    if (audioPlayer) {
-        const seekPosition = (seekbar.value / 100) * audioPlayer.duration;
-        audioPlayer.currentTime = seekPosition;
-        updateSeekBar(); // Call updateSeekBar to update the seekbar UI
-    }
-});
-
-function updateCurrentTimeDisplay() {
-    if (currentTimeDisplay && audioPlayer) {
-        currentTimeDisplay.textContent = formatDuration(Math.floor(audioPlayer.currentTime));
-    }
-}
-
-function updateDurationDisplay() {
-    if (durationDisplay && audioPlayer) {
-        durationDisplay.textContent = formatDuration(Math.floor(audioPlayer.duration));
-    }
+    fetch(apiUrl)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.success && data.data.results.length > 0) {
+                renderCards(data.data.results, filterValue);
+            } else {
+                renderNoResults();
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching data:', error);
+            renderError(error.message);
+        });
 }
 
 function renderCards(results, filterValue) {
@@ -148,8 +137,8 @@ function renderCards(results, filterValue) {
     });
 }
 
-async function playPlaylist(playlistId) {
-    const apiUrl = `https://saavn.dev/api/playlists?id=${playlistId}`;
+async function playAlbum(albumId) {
+    const apiUrl = `https://saavn.dev/api/albums?id=${albumId}`;
 
     try {
         const response = await fetch(apiUrl);
@@ -160,12 +149,38 @@ async function playPlaylist(playlistId) {
             playFromQueue();
             renderQueue(data.data.songs);
         } else {
-            console.error('No songs found in the playlist');
+            console.error('No songs found in the album');
         }
     } catch (error) {
-        console.error('Error fetching playlist data:', error);
+        console.error('Error fetching album data:', error);
     }
 }
+
+async function playFromQueue() {
+    if (currentSongIndex < queue.length) {
+        playAudio(queue[currentSongIndex]); // Play the current song
+    } else {
+        currentSongIndex = 0; // Reset the index to the beginning of the queue if all songs have been played
+    }
+}
+
+function updateQueue(newQueue) {
+    queue = newQueue.map(song => song.downloadUrl[song.downloadUrl.length - 1].url);
+    currentSongIndex = 0; // Reset the current song index
+    playFromQueue(); // Play from the beginning of the new queue
+    renderQueue(newQueue); // Update the queue display
+}
+function highlightCurrentSong() {
+    const queueSongs = queueContainer.querySelectorAll('.queue-song');
+    queueSongs.forEach((songElement, index) => {
+        if (index === currentSongIndex) {
+            songElement.classList.add('playing');
+        } else {
+            songElement.classList.remove('playing');
+        }
+    });
+}
+
 
 function renderQueue(songs) {
     queueContainer.innerHTML = '<h3>Queue</h3>';
@@ -173,7 +188,7 @@ function renderQueue(songs) {
     songs.forEach((song, index) => {
         const songElement = document.createElement('div');
         songElement.classList.add('queue-song');
-
+        
         const songImage = document.createElement('img');
         songImage.src = song.image[0]?.url || 'default-image.jpg'; // Use the first image option for queue items
         songImage.alt = song.name;
@@ -185,16 +200,27 @@ function renderQueue(songs) {
 
         songElement.addEventListener('click', () => {
             const highestQualityUrl = song.downloadUrl[song.downloadUrl.length - 1].url;
-            currentSongIndex = index; // Set the current index to the clicked song
-            playAudio(highestQualityUrl);
-        });
+            currentSongIndex = index; // Update current index to the clicked song
+            playFromQueue(highestQualityUrl);
+          });
 
         queueContainer.appendChild(songElement);
     });
-
     highlightCurrentSong(); // Highlight the current song initially
 }
+function playNext() {
+    currentSongIndex = (currentSongIndex + 1) % queue.length;
+    playFromQueue();
+}
+function playPrevious() {
+    currentSongIndex = (currentSongIndex - 1 + queue.length) % queue.length;
+    playFromQueue();
+}
 
+function playFromQueue() {
+    playAudio(queue[currentSongIndex]);
+    highlightCurrentSong();
+}
 function playAudio(url) {
     if (audioPlayer) {
         audioPlayer.pause();
@@ -208,26 +234,6 @@ function playAudio(url) {
     audioPlayer.play();
 }
 
-function updateQueue(newQueue) {
-    queue = newQueue.map(song => song.downloadUrl[song.downloadUrl.length - 1].url);
-    currentSongIndex = 0;
-}
-
-function playNext() {
-    currentSongIndex = (currentSongIndex + 1) % queue.length;
-    playFromQueue();
-}
-
-function playPrevious() {
-    currentSongIndex = (currentSongIndex - 1 + queue.length) % queue.length;
-    playFromQueue();
-}
-
-function playFromQueue() {
-    playAudio(queue[currentSongIndex]);
-    highlightCurrentSong();
-}
-
 function highlightCurrentSong() {
     const queueSongs = queueContainer.querySelectorAll('.queue-song');
     queueSongs.forEach((songElement, index) => {
@@ -239,20 +245,20 @@ function highlightCurrentSong() {
     });
 }
 
-function formatDuration(seconds) {
-    const minutes = Math.floor(seconds / 60);
-    const remainingSeconds = seconds % 60;
-    return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
+function formatDuration(durationInSeconds) {
+    const minutes = Math.floor(durationInSeconds / 60);
+    const seconds = durationInSeconds % 60;
+    return `${minutes}:${seconds.toString().padStart(2, '0')}`;
 }
 
 function renderNoResults() {
-    cardContainer.innerHTML = '<p>No results found</p>';
+    cardContainer.innerHTML = '<p>No results found.</p>';
 }
 
-function renderError(message) {
-    cardContainer.innerHTML = `<p>Error: ${message}</p>`;
+function renderError(errorMessage) {
+    cardContainer.innerHTML = `<p>Error: ${errorMessage}</p>`;
 }
-
+// Event listeners for playbar buttons
 const playButton = document.getElementById('playButton');
 const nextButton = document.getElementById('nextButton');
 const prevButton = document.getElementById('prevButton');
@@ -261,48 +267,14 @@ playButton.addEventListener('click', togglePlayPause);
 nextButton.addEventListener('click', playNext);
 prevButton.addEventListener('click', playPrevious);
 
-document.addEventListener('keydown', handleKeyDown);
-
-function handleKeyDown(event) {
-    const searchInputFocused = document.activeElement === searchInput;
-
-    if (!searchInputFocused) {
-        if (event.ctrlKey) {
-            switch (event.key) {
-                case 'ArrowUp':
-                    adjustVolume(0.1); // Increase volume by 10%
-                    break;
-                case 'ArrowDown':
-                    adjustVolume(-0.1); // Decrease volume by 10%
-                    break;
-                case 'ArrowRight':
-                    playNext(); // Play next song
-                    break;
-                case 'ArrowLeft':
-                    playPrevious(); // Play previous song
-                    break;
-                default:
-                    break;
-            }
-        } else {
-            switch (event.key) {
-                case ' ':
-                    event.preventDefault(); // Prevent spacebar from scrolling the page
-                    togglePlayPause(); // Toggle play/pause
-                    break;
-                default:
-                    break;
-            }
-        }
-    }
-}
-
+// Event listener for seekbar control
 document.querySelector(".seekbar").addEventListener("click", e => {
     let percent = (e.offsetX / e.target.getBoundingClientRect().width) * 100;
     document.querySelector(".circle img").style.left = percent + "%";
     audioPlayer.currentTime = ((audioPlayer.duration) * percent) / 100;
 });
 
+// Function to toggle play/pause
 function togglePlayPause() {
     if (!audioPlayer) return; // Audio player not initialized
 
@@ -317,8 +289,27 @@ function togglePlayPause() {
     }
 }
 
-function adjustVolume(change) {
-    if (!audioPlayer) return; // Audio player not initialized
+// Function to update the seekbar, current time display, and duration display
+function updateSeekBar() {
+    const filled = document.querySelector('.seekbar .filled');
+    const circle = document.querySelector('.seekbar .circle');
 
-    audioPlayer.volume = Math.min(Math.max(audioPlayer.volume + change, 0), 1);
+    if (filled && circle && audioPlayer) {
+        const progress = (audioPlayer.currentTime / audioPlayer.duration) * 100;
+        filled.style.width = `${progress}%`;
+        circle.style.left = `${progress}%`;
+    }
 }
+
+function updateCurrentTimeDisplay() {
+    if (currentTimeDisplay && audioPlayer) {
+        currentTimeDisplay.textContent = formatDuration(Math.floor(audioPlayer.currentTime));
+    }
+}
+
+function updateDurationDisplay() {
+    if (durationDisplay && audioPlayer) {
+        durationDisplay.textContent = formatDuration(Math.floor(audioPlayer.duration));
+    }
+}
+
