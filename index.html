@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,6 +8,7 @@
     <link rel="icon" href="favicon.svg" sizes="any" type="image/svg+xml">
     <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
     <header>
         <nav style="display: flex; justify-content: space-between;">
@@ -52,19 +54,21 @@
             <button class="control-button" id="nextButton">
                 <img src="assets/next.svg" alt="Next">
             </button>
-            <div class="seektime">
-                <div id="currentTimeDisplay" class="countUptpDuration">0:00</div>
-                <div class="seekbar">
-                    <div class="filled"></div>
-                    <div class="circle">
-                        <img src="/assets/disk.svg" alt="disk" draggable="false">
-                    </div>
+        </div>
+        
+        <div class="seektime">
+            <div id="currentTimeDisplay" class="countUptpDuration">0:00</div>
+            <div class="seekbar">
+                <div class="filled"></div>
+                <div class="circle">
+                    <img src="/assets/disk.svg" alt="disk" draggable="false">
                 </div>
-                <div id="durationDisplay" class="durationOfSong">0:00</div>
             </div>
+            <div id="durationDisplay" class="durationOfSong">0:00</div>
         </div>
     </div>
 
     <script src="script.js"></script>
 </body>
+
 </html>
