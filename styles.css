@@ -308,6 +308,7 @@ a {
 }
 
 .seekbar .filled {
+    transition: 500ms;
     height: 100%;
     background-color: #957c3dc4;
     border-radius: 12px;
@@ -317,6 +318,7 @@ a {
 }
 
 .seekbar .circle {
+    transition: 500ms;
     width: 16px;
     height: 16px;
     background-color: var(--button-primary);
