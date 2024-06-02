@@ -65,6 +65,7 @@ function renderCards(results, filterValue) {
         const image = document.createElement('img');
         image.src = result.image[2]?.url || 'default-image.jpg'; // Use the third image option for cards
         image.alt = result.name;
+        image.draggable = false; 
         card.appendChild(image);
 
         const name = document.createElement('h3');
@@ -182,6 +183,7 @@ function renderQueue(songs) {
         const songImage = document.createElement('img');
         songImage.src = song.image[0]?.url || 'default-image.jpg'; // Use the first image option for queue items
         songImage.alt = song.name;
+        songImage.draggable = false; 
         songElement.appendChild(songImage);
 
         const songInfo = document.createElement('div');

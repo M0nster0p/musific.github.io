@@ -1,4 +1,16 @@
-/* General styles for body, header, nav, etc. */
+:root {
+    --background-color: #011122d3; /* Dark Royal Blue */
+    --panel-background-color: #1C1C1C; /* Dark panel background */
+    --card-background-color: #2A2A2A; /* Dark card background */
+    --text-primary: #FFFFFF; /* White for primary text */
+    --text-secondary: #D3D3D3; /* Light gray for secondary text */
+    --text-muted: #A9A9A9; /* Medium gray for muted text */
+    --highlight-color: #957C3D; /* Gold for highlights and important elements */
+    --button-primary: #4169E1; /* Royal Blue for primary buttons */
+    --button-secondary: #50C878; /* Emerald Green for secondary buttons */
+    --button-danger: #9B111E; /* Ruby Red for danger buttons */
+}
+
 body {
     font-family: Arial, sans-serif;
     margin: 0;
@@ -7,11 +19,12 @@ body {
     flex-direction: column;
     min-height: 100vh;
     overflow: hidden;
-    /* Prevent body scroll */
+    background-color: var(--background-color);
+    color: var(--text-primary);
 }
 
 header {
-    background-color: #282828;
+    background-color: var(--panel-background-color);
     padding: 10px 20px;
     flex-shrink: 0;
 }
@@ -24,8 +37,12 @@ header {
 }
 
 .nav-list a {
-    color: #fff;
+    color: var(--text-muted);
     text-decoration: none;
+}
+.nav-list a:hover {
+    transition: 0.5s;
+    color: var(--text-primary);
 }
 
 .logo {
@@ -37,7 +54,7 @@ header {
     align-items: center;
     justify-content: center;
     padding: 10px;
-    background-color: #f5f5f5;
+    background-color: var(--card-background-color);
     border-radius: 4px;
     flex-shrink: 0;
 }
@@ -48,50 +65,70 @@ header {
     border: none;
     border-radius: 4px;
     font-size: 16px;
+    background-color: var(--panel-background-color);
+    color: var(--text-secondary);
 }
 
 .search-container button {
     padding: 8px 16px;
     margin-left: 10px;
-    background-color: #4caf50;
-    color: white;
+    background-color: var(--highlight-color);
+    color: var(--text-muted);
     border: none;
     border-radius: 4px;
     font-size: 16px;
     cursor: pointer;
 }
 
+.search-container button:hover {
+    transition: 500ms;
+    background-color: var(--highlight-color);
+    color: var(--text-secondary);
+}
+
 .filter-container {
     display: flex;
     justify-content: center;
     margin-top: 10px;
+    padding-bottom: 5px;
     flex-shrink: 0;
+    color: var(--text-muted);
+}
+.filter-container:hover {
+    color: var(--text-muted);
 }
 
 .filter-container label {
     margin: 0 10px;
     font-size: 16px;
 }
+.filter-container label {
+    color: var(--text-muted);
+}
+.filter-container label:hover {
+    transition: 500ms;
+    color: var(--text-primary);
+}
 
 .content-container {
     display: flex;
     padding: 20px;
+    gap: 12px;
     flex: 1;
     overflow-y: auto;
-    /* Allow scrolling */
+    background-color: var(--background-color);
+    color: var(--text-primary);
 }
 
 .queue-container {
     flex: 1;
     max-width: 300px;
     padding: 20px;
-    background-color: #f5f5f5;
-    border-radius: 4px;
+    background-color: var(--panel-background-color);
+    border-radius: 12px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     overflow-y: auto;
-    /* Allow scrolling */
     height: calc(100vh - 300px);
-    /* Adjust height to fit within viewport and avoid playbar */
 }
 
 .card-container {
@@ -100,21 +137,26 @@ header {
     gap: 20px;
     flex: 3;
     overflow-y: auto;
-    /* Allow scrolling */
     height: calc(100vh - 240px);
-    /* Adjust height to fit within viewport */
 }
 
 .card {
-    border: 1px solid #ccc;
-    border-radius: 4px;
+    border: 1px solid var(--highlight-color);
+    border-radius: 10px;
     padding: 16px;
     text-align: left;
     position: relative;
     max-width: 250px;
+    background-color: var(--card-background-color);
+    color: var(--text-primary);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* Add shadow to current song image */
+
 }
 
 .card img {
+    border: 1px solid var(--highlight-color);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* Add shadow to current song image */
+    border-radius: 12px; ;
     max-width: 100%;
     height: auto;
     margin-bottom: 10px;
@@ -122,10 +164,11 @@ header {
 
 .card .play-button {
     position: absolute;
-    top: 10px;
+    top: 50%;
+    transform: translateY(-50%);
     right: 10px;
-    background-color: #06191b;
-    color: white;
+    background-color: var(--highlight-color);
+    color: var(--text-muted);
     border: none;
     border-radius: 50%;
     width: 40px;
@@ -135,6 +178,13 @@ header {
     justify-content: center;
     align-items: center;
     cursor: pointer;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    transition: background-color 0.3s ease;
+}
+
+.card .play-button:hover {
+    background-color: #7f692b; /* Darken the color on hover */
+    color: var(--text-primary);
 }
 
 a {
@@ -146,21 +196,34 @@ a {
     display: flex;
     align-items: center;
     margin-bottom: 10px;
+    color: var(--text-muted);
+}
+.queue-song:hover {
+    color: var(--text-secondary);
 }
 
 .queue-song img {
     width: 50px;
     height: 50px;
     margin-right: 10px;
+    border-radius: 12px;
+    overflow: hidden;
 }
 
 .queue-song.playing {
-    background-color: #d3d3d3;
+    border-radius: 12px;
+    overflow: hidden;
+    background-color: var(--highlight-color);
+    color: var(--text-primary);
     font-weight: bold;
 }
 
+.queue-song.playing img {
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* Add shadow to current song image */
+}
+
 .playbar {
-    background-color: #282828;
+    background-color: var(--panel-background-color);
     padding: 10px 20px;
     position: sticky;
     bottom: 0;
@@ -188,6 +251,10 @@ a {
     width: 24px;
     height: 24px;
 }
+.control-button:hover img {
+    transition: 0.4s;
+    filter: invert(2);
+}
 
 @media screen and (max-width: 1000px) {
     .playbar-content {
@@ -201,40 +268,31 @@ a {
 /* Custom scrollbar styles */
 ::-webkit-scrollbar {
     width: 8px;
-    /* Set the width of the scrollbar */
     height: 8px;
-    /* Set the height of the scrollbar */
 }
 
 ::-webkit-scrollbar-track {
     background: transparent;
-    /* Set the background of the scrollbar track */
 }
 
 ::-webkit-scrollbar-thumb {
     background-color: #444;
-    /* Set the color of the scrollbar thumb */
     border-radius: 10px;
-    /* Round the corners of the scrollbar thumb */
     visibility: hidden;
-    /* Hide the scrollbar thumb */
 }
 
 .content-container:hover ::-webkit-scrollbar-thumb,
 .queue-container:hover ::-webkit-scrollbar-thumb {
     visibility: visible;
-    /* Show the scrollbar thumb on hover */
 }
 
 ::-webkit-scrollbar-thumb:hover {
     background: #222;
-    /* Darken the scrollbar thumb on hover */
 }
 
 .seektime {
     width: 100%;
     display: flex;
-    /* align-items: center; */
     justify-content: space-evenly;
     padding: 5px;
 }
@@ -251,8 +309,7 @@ a {
 
 .seekbar .filled {
     height: 100%;
-    background-color: #4968f3;
-    /* Change the color to match your theme */
+    background-color: #957c3dc4;
     border-radius: 12px;
     position: absolute;
     top: 0;
@@ -261,35 +318,29 @@ a {
 
 .seekbar .circle {
     width: 16px;
-    /* Adjust size as needed */
     height: 16px;
-    /* Adjust size as needed */
-    background-color: #4968f3;
-    /* Change the color to match your theme */
+    background-color: var(--button-primary);
     border-radius: 50%;
     position: absolute;
-    /* Change position to absolute */
     top: 50%;
     transform: translateY(-50%);
     left: 0;
-    /* Set initial left position to 0 */
     z-index: 1;
 }
 
 .countUptpDuration {
-    filter: invert(1);
+    color: var(--text-secondary);
 }
 
 .durationOfSong {
-    filter: invert(1);
+    color: var(--text-secondary);
 }
 
 .seekbar .circle img {
+    background-color: var(--highlight-color);
     display: block;
     width: 100%;
-    /* Adjust size as needed */
     height: auto;
-    /* Adjust size as needed */
     border-radius: 50%;
 }
 
@@ -318,7 +369,6 @@ a {
     .queue-container {
         max-width: 250px;
         height: calc(100vh - 280px);
-        /* Adjust height to fit within viewport */
     }
 
     .card {
