@@ -1,11 +1,12 @@
 async function playPlaylist(playlistId) {
-    const apiUrl = `https://saavn.dev/api/playlists?id=${playlistId}`;
+    const limit = 50; // Set the desired limit here, or higher if needed
+    const apiUrl = `https://saavn.dev/api/playlists?id=${playlistId}&limit=${limit}`;
 
     try {
         const response = await fetch(apiUrl);
         const data = await response.json();
         if (data.success && data.data.songs.length > 0) {
-            queue = data.data.songs;
+            queue = data.data.songs.map(song => song.downloadUrl[song.downloadUrl.length - 1].url);
             currentSongIndex = 0;
             playFromQueue();
             renderQueue(data.data.songs); // Render the queue with playlist data
@@ -23,38 +24,35 @@ const searchBtn = document.getElementById('searchBtn');
 const cardContainer = document.querySelector('.card-container');
 const queueContainer = document.getElementById('queueContainer');
 
-
 let audioPlayer = null; // Global audio player instance
 let queue = []; // Array to keep track of the song queue
 let currentSongIndex = 0; // Index of the currently playing song in the queue
 
 searchBtn.addEventListener('click', performSearch);
 
-function performSearch() {
+async function performSearch() {
     const searchTerm = searchInput.value.trim();
     const checkedFilter = document.querySelector('.filter-container input[type="radio"]:checked');
     const filterValue = checkedFilter ? checkedFilter.value : 'song'; // Default to 'song' if no filter is selected
 
-    const apiUrl = `https://saavn.dev/api/search/${filterValue}s?query=${encodeURIComponent(searchTerm)}`;
+    const limit = 50; // Set the desired limit here
+    const apiUrl = `https://saavn.dev/api/search/${filterValue}s?query=${encodeURIComponent(searchTerm)}&limit=${limit}`;
 
-    fetch(apiUrl)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(`HTTP error ${response.status}`);
-            }
-            return response.json();
-        })
-        .then(data => {
-            if (data.success && data.data.results.length > 0) {
-                renderCards(data.data.results, filterValue);
-            } else {
-                renderNoResults();
-            }
-        })
-        .catch(error => {
-            console.error('Error fetching data:', error);
-            renderError(error.message);
-        });
+    try {
+        const response = await fetch(apiUrl);
+        if (!response.ok) {
+            throw new Error(`HTTP error ${response.status}`);
+        }
+        const data = await response.json();
+        if (data.success && data.data.results.length > 0) {
+            renderCards(data.data.results, filterValue);
+        } else {
+            renderNoResults();
+        }
+    } catch (error) {
+        console.error('Error fetching data:', error);
+        renderError(error.message);
+    }
 }
 
 function renderCards(results, filterValue) {
@@ -156,20 +154,13 @@ async function playAlbum(albumId) {
     }
 }
 
-async function playFromQueue() {
-    if (currentSongIndex < queue.length) {
-        playAudio(queue[currentSongIndex]); // Play the current song
-    } else {
-        currentSongIndex = 0; // Reset the index to the beginning of the queue if all songs have been played
-    }
-}
-
 function updateQueue(newQueue) {
     queue = newQueue.map(song => song.downloadUrl[song.downloadUrl.length - 1].url);
     currentSongIndex = 0; // Reset the current song index
     playFromQueue(); // Play from the beginning of the new queue
     renderQueue(newQueue); // Update the queue display
 }
+
 function highlightCurrentSong() {
     const queueSongs = queueContainer.querySelectorAll('.queue-song');
     queueSongs.forEach((songElement, index) => {
@@ -180,7 +171,6 @@ function highlightCurrentSong() {
         }
     });
 }
-
 
 function renderQueue(songs) {
     queueContainer.innerHTML = '<h3>Queue</h3>';
@@ -201,17 +191,19 @@ function renderQueue(songs) {
         songElement.addEventListener('click', () => {
             const highestQualityUrl = song.downloadUrl[song.downloadUrl.length - 1].url;
             currentSongIndex = index; // Update current index to the clicked song
-            playFromQueue(highestQualityUrl);
-          });
+            playFromQueue();
+        });
 
         queueContainer.appendChild(songElement);
     });
     highlightCurrentSong(); // Highlight the current song initially
 }
+
 function playNext() {
     currentSongIndex = (currentSongIndex + 1) % queue.length;
     playFromQueue();
 }
+
 function playPrevious() {
     currentSongIndex = (currentSongIndex - 1 + queue.length) % queue.length;
     playFromQueue();
@@ -221,6 +213,7 @@ function playFromQueue() {
     playAudio(queue[currentSongIndex]);
     highlightCurrentSong();
 }
+
 function playAudio(url) {
     if (audioPlayer) {
         audioPlayer.pause();
@@ -258,6 +251,7 @@ function renderNoResults() {
 function renderError(errorMessage) {
     cardContainer.innerHTML = `<p>Error: ${errorMessage}</p>`;
 }
+
 // Event listeners for playbar buttons
 const playButton = document.getElementById('playButton');
 const nextButton = document.getElementById('nextButton');
@@ -312,4 +306,3 @@ function updateDurationDisplay() {
         durationDisplay.textContent = formatDuration(Math.floor(audioPlayer.duration));
     }
 }
-
