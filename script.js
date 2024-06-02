@@ -283,6 +283,15 @@ function togglePlayPause() {
     }
 }
 
+// event lister for M0NSTER
+document.addEventListener('DOMContentLoaded', function() {
+    const monsterLink = document.getElementById('monsterLink');
+    monsterLink.addEventListener('click', function(event) {
+        event.preventDefault(); // Prevent the default link behavior
+        window.open('https://github.com/m0nster0p', '_blank'); // Open the GitHub profile in a new tab
+    });
+});
+
 // Function to update the seekbar, current time display, and duration display
 function updateSeekBar() {
     const filled = document.querySelector('.seekbar .filled');
