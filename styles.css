@@ -90,8 +90,8 @@ header {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     overflow-y: auto;
     /* Allow scrolling */
-    height: calc(100vh - 240px);
-    /* Adjust height to fit within viewport */
+    height: calc(100vh - 300px);
+    /* Adjust height to fit within viewport and avoid playbar */
 }
 
 .card-container {
@@ -188,7 +188,6 @@ a {
     width: 24px;
     height: 24px;
 }
-
 
 @media screen and (max-width: 1000px) {
     .playbar-content {
@@ -318,7 +317,7 @@ a {
 
     .queue-container {
         max-width: 250px;
-        height: calc(100vh - 220px);
+        height: calc(100vh - 280px);
         /* Adjust height to fit within viewport */
     }
 
@@ -398,5 +397,4 @@ a {
     .card-container {
         grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
     }
-
 }
