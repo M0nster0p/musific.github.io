@@ -83,7 +83,7 @@ header {
 .search-container button:hover {
     transition: 500ms;
     background-color: var(--highlight-color);
-    color: var(--text-secondary);
+    color: var(--text-primary);
 }
 
 .filter-container {
