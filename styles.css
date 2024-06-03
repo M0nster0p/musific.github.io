@@ -6,6 +6,7 @@
     --text-secondary: #D3D3D3; /* Light gray for secondary text */
     --text-muted: #A9A9A9; /* Medium gray for muted text */
     --highlight-color: #957C3D; /* Gold for highlights and important elements */
+    --highlight-color-glow: #e2c680; /* Gold for highlights and important elements */
     --button-primary: #4169E1; /* Royal Blue for primary buttons */
     --button-secondary: #50C878; /* Emerald Green for secondary buttons */
     --button-danger: #9B111E; /* Ruby Red for danger buttons */
@@ -103,6 +104,22 @@ input[type="radio"] + label {
 /* Optional: change label text color on hover */
 input[type="radio"] + label:hover {
     color: var(--text-primary);
+}
+/* In your CSS */
+.radio-label {
+    color: var(--text-muted);
+}
+
+input[type="radio"]:checked + .radio-label {
+    color: var(--highlight-color);
+}
+.radio-label:hover {
+    transition: 0.5s;
+    color: var(--text-primary);
+}
+input[type="radio"]:checked + .radio-label:hover {
+    transition: 0.5s;
+    color: var(--highlight-color-glow);
 }
 
 

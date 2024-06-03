@@ -4,7 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Musific is a music streaming platform where you can search and listen to your favorite songs, artists, albums, and playlists.">
+    <meta name="description"
+        content="Musific is a music streaming platform where you can search and listen to your favorite songs, artists, albums, and playlists.">
     <title>Musific</title>
     <link rel="icon" href="favicon.svg" sizes="any" type="image/svg+xml">
     <link rel="stylesheet" href="styles.css">
@@ -27,16 +28,20 @@
     </div>
     <div class="filter-container">
         <label>
-            <input type="radio" name="filter" value="song" checked> Songs
+            <input type="radio" name="filter" value="song" checked>
+            <span class="radio-label">Songs</span>
         </label>
         <label>
-            <input type="radio" name="filter" value="artist"> Artists
+            <input type="radio" name="filter" value="artist">
+            <span class="radio-label">Artists</span>
         </label>
         <label>
-            <input type="radio" name="filter" value="album"> Albums
+            <input type="radio" name="filter" value="album">
+            <span class="radio-label">Albums</span>
         </label>
         <label>
-            <input type="radio" name="filter" value="playlist"> Playlists
+            <input type="radio" name="filter" value="playlist">
+            <span class="radio-label">Playlists</span>
         </label>
     </div>
 
@@ -56,7 +61,7 @@
                 <img src="assets/next.svg" alt="Next" draggable="false">
             </button>
         </div>
-        
+
         <div class="seektime">
             <div id="currentTimeDisplay" class="countUptpDuration">0:00</div>
             <div class="seekbar">
@@ -68,7 +73,7 @@
             <div id="durationDisplay" class="durationOfSong">0:00</div>
         </div>
     </div>
-   
+
     <script src="script.js"></script>
 </body>
 
