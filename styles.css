@@ -385,11 +385,19 @@ a {
 }
 
 .countUptpDuration {
-    color: var(--text-secondary);
+    color: var(--button-primary);
+}
+.countUptpDuration:hover {
+    transition: 0.5s;
+    color: var(--highlight-color-glow);
 }
 
 .durationOfSong {
-    color: var(--text-secondary);
+    color: var(--button-primary);
+}
+.durationOfSong:hover {
+    transition: 0.5s;
+    color: var(--highlight-color-glow);
 }
 
 .seekbar .circle img {
