@@ -69,6 +69,43 @@ header {
     color: var(--text-secondary);
 }
 
+
+/* Hide the default radio button */
+input[type="radio"] {
+    display: none;
+}
+
+/* Create a custom radio button */
+input[type="radio"] + label::before {
+    content: "";
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border: 2px solid var(--button-secondary);
+    border-radius: 50%;
+    margin-right: 8px;
+    vertical-align: middle;
+    transition: background-color 0.3s, border-color 0.3s;
+}
+
+/* Style the radio button when checked */
+input[type="radio"]:checked + label::before {
+    background-color: var(--button-secondary);
+    border-color: var(--button-secondary);
+}
+
+/* Add this if you want to style the label text color */
+input[type="radio"] + label {
+    color: var(--text-muted);
+    cursor: pointer;
+}
+
+/* Optional: change label text color on hover */
+input[type="radio"] + label:hover {
+    color: var(--text-primary);
+}
+
+
 .search-container button {
     padding: 8px 16px;
     margin-left: 10px;
