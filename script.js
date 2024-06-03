@@ -317,3 +317,62 @@ function updateDurationDisplay() {
         durationDisplay.textContent = formatDuration(Math.floor(audioPlayer.duration));
     }
 }
+// Add event listener for keyboard controls
+document.addEventListener('keydown', handleKeyDown);
+
+function handleKeyDown(event) {
+    const searchInputFocused = document.activeElement === searchInput;
+
+    if (!searchInputFocused) {
+        if (event.ctrlKey) {
+            switch (event.key) {
+                case 'ArrowUp':
+                    adjustVolume(0.1); // Increase volume by 10%
+                    break;
+                case 'ArrowDown':
+                    adjustVolume(-0.1); // Decrease volume by 10%
+                    break;
+                case 'ArrowRight':
+                    playNext(); // Play next song
+                    break;
+                case 'ArrowLeft':
+                    playPrevious(); // Play previous song
+                    break;
+                default:
+                    break;
+            }
+        } else if (event.shiftKey) {
+            switch (event.key) {
+                case 'ArrowRight':
+                    seek(10); // Seek forward by 10 seconds
+                    break;
+                case 'ArrowLeft':
+                    seek(-10); // Seek backward by 10 seconds
+                    break;
+                default:
+                    break;
+            }
+        } else {
+            switch (event.key) {
+                case ' ':
+                    event.preventDefault(); // Prevent spacebar from scrolling the page
+                    togglePlayPause(); // Toggle play/pause
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+}
+
+function adjustVolume(change) {
+    if (!audioPlayer) return; // Audio player not initialized
+
+    audioPlayer.volume = Math.min(Math.max(audioPlayer.volume + change, 0), 1);
+}
+
+function seek(seconds) {
+    if (!audioPlayer) return; // Audio player not initialized
+
+    audioPlayer.currentTime = Math.min(Math.max(audioPlayer.currentTime + seconds, 0), audioPlayer.duration);
+}
