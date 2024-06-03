@@ -18,7 +18,7 @@ Musific is your go-to open-source music streaming platform powered by the unoffi
 
 ## Test Musific Now!
 
-Want to experience Musific right away? Head over to [musific.github.io]((https://musific.freewebhostmost.com/) to start listening to your favorite tunes instantly!
+Want to experience Musific right away? Head over to [musific.github.io](https://musific.freewebhostmost.com/) to start listening to your favorite tunes instantly!
 
 ## Contributing
 
