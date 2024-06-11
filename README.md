@@ -38,3 +38,14 @@ Musific is licensed under the [MIT License](LICENSE).
 
 A big thank you to [sumitkolhe/jiosaavn-api](https://github.com/sumitkolhe/jiosaavn-api) for their amazing JioSaavn API wrapper.
 
+
+### Known Bugs/Limitations && Future Plans
+
+- [ ] Fixed songs limit to update dynamically(currently set to 50)
+- [x] Fixed issue with queue as it was not working properly
+- [x] Added Media Controls with keyboard
+- [ ] Add Homepage that will show some playlist or treding songs
+- [ ] Integrate a way to add song to likelist and that can be synced 
+- [ ] Fix Artist tab as currently it only redirects to jiosaavn site
+- [ ] Added current playing song tab that display the songs/lyrics if available
+
