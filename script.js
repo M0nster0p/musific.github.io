@@ -24,6 +24,130 @@ const searchBtn = document.getElementById('searchBtn');
 const cardContainer = document.querySelector('.card-container');
 const queueContainer = document.getElementById('queueContainer');
 
+const globalSearchBtn = document.getElementById('globalSearchBtn');
+
+globalSearchBtn.addEventListener('click', performGlobalSearch);
+
+async function performGlobalSearch() {
+    const searchTerm = searchInput.value.trim();
+    const limit = 50; // Set the desired limit here
+
+    const apiUrls = [
+        `https://saavn.dev/api/search/songs?query=${encodeURIComponent(searchTerm)}&limit=${limit}`,
+        `https://saavn.dev/api/search/albums?query=${encodeURIComponent(searchTerm)}&limit=${limit}`,
+        `https://saavn.dev/api/search/playlists?query=${encodeURIComponent(searchTerm)}&limit=${limit}`
+    ];
+
+    try {
+        const responses = await Promise.all(apiUrls.map(url => fetch(url)));
+        const results = await Promise.all(responses.map(response => response.json()));
+
+        const combinedResults = {
+            songs: results[0].data.results || [],
+            albums: results[1].data.results || [],
+            playlists: results[2].data.results || []
+        };
+
+        renderGlobalSearchResults(combinedResults);
+        cardContainer.classList.remove('grid-layout');
+        cardContainer.classList.add('column-layout');
+    } catch (error) {
+        console.error('Error fetching global search data:', error);
+        renderError(error.message);
+    }
+}
+
+function renderGlobalSearchResults(results) {
+    cardContainer.innerHTML = ''; // Clear previous results
+
+    const sections = ['songs', 'albums', 'playlists'];
+
+    sections.forEach(section => {
+        const sectionResults = results[section];
+        if (sectionResults.length > 0) {
+            const sectionContainer = document.createElement('div');
+            sectionContainer.classList.add('section-container');
+
+            const sectionHeader = document.createElement('h2');
+            sectionHeader.textContent = section.charAt(0).toUpperCase() + section.slice(1);
+            sectionContainer.appendChild(sectionHeader);
+
+            const cardsWrapper = document.createElement('div');
+            cardsWrapper.classList.add('cards-wrapper');
+
+            sectionResults.forEach(result => {
+                const card = document.createElement('div');
+                card.classList.add('card');
+
+                const image = document.createElement('img');
+                image.src = result.image[2]?.url || 'default-image.jpg';
+                image.alt = result.name;
+                image.draggable = false; 
+                card.appendChild(image);
+
+                const name = document.createElement('h3');
+                name.textContent = result.name;
+                card.appendChild(name);
+
+
+                if (section === 'albums') {
+                    const year = document.createElement('p');
+                    year.textContent = `Year: ${result.year}`;
+                    card.appendChild(year);
+
+                    const playButton = document.createElement('button');
+                    playButton.classList.add('play-button');
+                    playButton.textContent = '▶';
+                    playButton.addEventListener('click', () => {
+                        playAlbum(result.id);
+                    });
+                    card.appendChild(playButton);
+                } else if (section === 'songs') {
+                    const album = document.createElement('p');
+                    album.textContent = `Album: ${result.album.name}`;
+                    card.appendChild(album);
+
+                    const duration = document.createElement('p');
+                    duration.textContent = `Duration: ${formatDuration(result.duration)}`;
+                    card.appendChild(duration);
+
+                    const playCount = document.createElement('p');
+                    playCount.textContent = `Play Count: ${result.playCount}`;
+                    card.appendChild(playCount);
+
+                    const playButton = document.createElement('button');
+                    playButton.classList.add('play-button');
+                    playButton.textContent = '▶';
+                    playButton.addEventListener('click', () => {
+                        const highestQualityUrl = result.downloadUrl[result.downloadUrl.length - 1].url;
+                        playAudio(highestQualityUrl);
+                        updateQueue([...sectionResults.slice(index), ...sectionResults.slice(0, index)]);
+                    });
+                    card.appendChild(playButton);
+                } else if (section === 'playlists') {
+                    const songCount = document.createElement('p');
+                    songCount.textContent = `Song Count: ${result.songCount}`;
+                    card.appendChild(songCount);
+
+                    const playButton = document.createElement('button');
+                    playButton.classList.add('play-button');
+                    playButton.textContent = '▶';
+                    playButton.addEventListener('click', () => {
+                        playPlaylist(result.id);
+                    });
+                    card.appendChild(playButton);
+                }
+
+                cardsWrapper.appendChild(card);
+            });
+
+            sectionContainer.appendChild(cardsWrapper);
+            cardContainer.appendChild(sectionContainer);
+        }
+    });
+}
+
+
 let audioPlayer = null; // Global audio player instance
 let queue = []; // Array to keep track of the song queue
 let currentSongIndex = 0; // Index of the currently playing song in the queue
@@ -46,6 +170,8 @@ async function performSearch() {
         const data = await response.json();
         if (data.success && data.data.results.length > 0) {
             renderCards(data.data.results, filterValue);
+            cardContainer.classList.remove('column-layout');
+            cardContainer.classList.add('grid-layout');
         } else {
             renderNoResults();
         }
@@ -72,11 +198,6 @@ function renderCards(results, filterValue) {
         name.textContent = result.name;
         card.appendChild(name);
 
-        if (filterValue === 'song' || filterValue === 'album') {
-            const artist = document.createElement('p');
-            artist.textContent = `Artist: ${result.artists.primary[0]?.name || 'Unknown'}`;
-            card.appendChild(artist);
-        }
 
         if (filterValue === 'album') {
             const year = document.createElement('p');
@@ -112,12 +233,6 @@ function renderCards(results, filterValue) {
                 updateQueue([...results.slice(index), ...results.slice(0, index)]); // Update the queue with new songs
             });
             card.appendChild(playButton);
-        } else if (filterValue === 'artist') {
-            const link = document.createElement('a');
-            link.href = result.url;
-            link.textContent = 'View Artist';
-            link.target = '_blank';
-            card.appendChild(link);
         } else if (filterValue === 'playlist') {
             const songCount = document.createElement('p');
             songCount.textContent = `Song Count: ${result.songCount}`;

@@ -12,6 +12,70 @@
     --button-danger: #9B111E; /* Ruby Red for danger buttons */
 }
 
+.cards-wrapper {
+    display: flex;
+    overflow-x: auto;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* Internet Explorer 10+ */
+}
+
+.cards-wrapper::-webkit-scrollbar {
+    display: none; /* WebKit */
+}
+
+.section-container {
+    margin-bottom: 20px;
+}
+
+.card {
+    flex: 0 0 auto;
+    width: 200px; /* Adjust as needed */
+    margin-right: 10px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    text-align: center;
+    white-space: nowrap;
+}
+
+.card img {
+    width: 100%;
+    height: auto;
+    max-height: 150px; /* Adjust as needed */
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.card h3 {
+    font-size: 16px;
+    margin: 10px 0;
+}
+
+.card p {
+    font-size: 14px;
+    margin: 5px 0;
+}
+
+.play-button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.play-button:hover {
+    background-color: #0056b3;
+}
+
+.section-container h2 {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+
 body {
     font-family: Arial, sans-serif;
     margin: 0;
@@ -20,6 +84,7 @@ body {
     flex-direction: column;
     min-height: 100vh;
     overflow: hidden;
+    overflow-y: auto;
     background-color: var(--background-color);
     color: var(--text-primary);
 }
@@ -184,6 +249,23 @@ input[type="radio"]:checked + .radio-label:hover {
     overflow-y: auto;
     height: calc(100vh - 300px);
 }
+.card-container.grid-layout {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(229px, 1fr));
+    gap: 20px;
+    flex: 3;
+    overflow-y: auto;
+    height: calc(100vh - 240px);
+}
+.card-container.column-layout {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    flex: 3;
+    overflow-y: auto;
+    height: calc(100vh - 240px);
+}
+
 
 .card-container {
     display: grid;
