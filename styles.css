@@ -286,7 +286,12 @@ input[type="radio"]:checked + .radio-label:hover {
     background-color: var(--card-background-color);
     color: var(--text-primary);
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* Add shadow to current song image */
-
+}
+.card h3,
+.card p {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .card img {
