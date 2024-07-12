@@ -89,7 +89,6 @@ function renderGlobalSearchResults(results) {
                 name.textContent = result.name;
                 card.appendChild(name);
 
-
                 if (section === 'albums') {
                     const year = document.createElement('p');
                     year.textContent = `Year: ${result.year}`;
@@ -111,17 +110,16 @@ function renderGlobalSearchResults(results) {
                     duration.textContent = `Duration: ${formatDuration(result.duration)}`;
                     card.appendChild(duration);
 
-                    const playCount = document.createElement('p');
-                    playCount.textContent = `Play Count: ${result.playCount}`;
-                    card.appendChild(playCount);
-
                     const playButton = document.createElement('button');
                     playButton.classList.add('play-button');
                     playButton.textContent = '▶';
                     playButton.addEventListener('click', () => {
                         const highestQualityUrl = result.downloadUrl[result.downloadUrl.length - 1].url;
                         playAudio(highestQualityUrl);
-                        updateQueue([...sectionResults.slice(index), ...sectionResults.slice(0, index)]);
+                        updateQueue(sectionResults.map(song => ({
+                            ...song,
+                            downloadUrl: song.downloadUrl[song.downloadUrl.length - 1].url
+                        })));
                     });
                     card.appendChild(playButton);
                 } else if (section === 'playlists') {
