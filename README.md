@@ -46,6 +46,6 @@ A big thank you to [sumitkolhe/jiosaavn-api](https://github.com/sumitkolhe/jiosa
 - [x] Added Media Controls with keyboard
 - [ ] Add Homepage that will show some playlist or treding songs
 - [ ] Integrate a way to add song to likelist/create playlist with ability to sync 
-- [ ] Fix Artist tab as currently it only redirects to jiosaavn site
+- [x] Nuked Artist Tab 👽
 - [ ] Added current playing song tab that display the songs/lyrics if available
 - [ ] Redesign Playbar with more options
